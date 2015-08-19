@@ -59,8 +59,10 @@ class Response(object):
 		self.status=statusCodes.get(str(status),str(status))
 		self.headers=headers
 		if(redirect != False):
+			if(not redirect.startswith('http://')):
+				redirect='/'+redirect
 			self.status='302 Found'
-			headers.append(('Location',str(redirect)))
+			headers['Location']=str(redirect)
 
 		
 
