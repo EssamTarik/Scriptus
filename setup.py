@@ -11,11 +11,17 @@ for f in tomove:
 		shutil.move(f,os.path.join(Sdir,f))
 	except IOError,error:
 		print str(error)
+	except OSError,error:
+		print str(error)
+		
 
 for f in toremove:
 	try:
 		os.remove(f)
 	except IOError,error:
 		print str(error)
+	except OSError,error:
+		print str(error)
+		
 
 print 'setup complete'
