@@ -1,6 +1,8 @@
 from Scriptus import Scriptus
 from Scriptus.wrappers import Response
 from Scriptus import session
+
+#get Scriptus object
 app=Scriptus()
 
 
@@ -14,9 +16,9 @@ app.route(r'^/$',helloworld)
 # to get variables from a url, they're sent by order
 #name and age are by order ([a-z]+) and ([0-9]+)
 def welcome(request,name,age):
-	return 'welcome %s who is %s years old'
+	return 'welcome %s who is %s years old'%(name,age)
 
-app.route(r'^/([a-z]+)/([0-9]+)/?$',welcome)
+app.route(r'^/welcome/([a-z]+)/([0-9]+)/?$',welcome)
 
 
 #to add a cookie
@@ -24,20 +26,19 @@ app.route(r'^/([a-z]+)/([0-9]+)/?$',welcome)
 #setcookie takes name,value,expiration time(seconds)
 def addcookie(request):
 	response=Response()
-	response.setcookie('name','name')
-	response.text='cookie has been set'
+	response.setcookie('name','user')
+	response.text='cookie set'
 	return response
 
-app.route(r'^/cookie/addcookie/?$',addcookie)
+app.route(r'^/addcookie/?$',addcookie)
 
 
 
-#to read a cookie
+#to read a cookie , second argument is returned if the cookie isn't found
 def getcookie(request):
-	cookievalue=app.getcookie('name')
-	return cookievalue
+	return app.getcookie('name','no cookie')
 
-app.route(r'^/cookie/getcookie/?$',getcookie)
+app.route(r'^/getcookie/?$',getcookie)
 
 
 #to process get request

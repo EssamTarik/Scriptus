@@ -68,12 +68,13 @@ class Response(object):
 	def removecookie(self,name):
 		self.cookies[name]=None
 		self.cookies[name]['expires']=-1
+		self.cookies[name]['path']='/'
 
 	def setcookie(self,name,value,expires=None):
 		self.cookies[str(name)]=str(value)
-		self.cookies[name]['path']='/'
 		if expires is not None:
-			self.cookies[name]['expires']=int(expires)
+			self.cookies[str(name)]['expires']=int(expires)
+		self.cookies[str(name)]['path']='/'
 
 	def __call__(self,environ,start_response):
 		
