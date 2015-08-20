@@ -36,7 +36,7 @@ app.route(r'^/addcookie/?$',addcookie)
 
 #to read a cookie , second argument is returned if the cookie isn't found
 def getcookie(request):
-	return app.getcookie('name','no cookie')
+	return request.getcookie('name','no cookie')
 
 app.route(r'^/getcookie/?$',getcookie)
 

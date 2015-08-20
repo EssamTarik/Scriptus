@@ -2,6 +2,7 @@ from Cookie import SimpleCookie
 from cgi import FieldStorage
 import urlparse
 import os
+
 class File(object):
 	def __init__(self,fileobject):
 		self.fileobject=fileobject
@@ -42,6 +43,17 @@ class Request(object):
 		if self.method=='POST' :
 			self.POST=FieldStorage(fp=self.environ['wsgi.input'],environ=self.environ,keep_blank_values=True)
 			self.POST=POST(self.POST)
+
+	#reads cookies from environ's HTTP_COOKIE
+	#a KeyError is raised if either HTTP_COOKIE or the required cookie doesnt exist , default is returned in either case
+	def getcookie(self,key,default=''):
+		try:
+			c=SimpleCookie()
+			c.load(self.environ['HTTP_COOKIE'])
+			return str(c[key].value)
+		except KeyError:
+			return default
+
 
 
 class Response(object):
