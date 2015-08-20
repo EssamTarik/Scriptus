@@ -1,4 +1,4 @@
-#Scriptus is a python micro-framework aimed at easing basic web development tasks in python , inspired by werkzeug
+#Scriptus is a python micro-framework , it's a small package that handles routing, POST and GET request processing ,cookies and sessions
 
 from wsgiref.simple_server import make_server
 import re
@@ -6,15 +6,13 @@ from wrappers import Request,Response
 from Cookie import SimpleCookie
 import pickle,os
 
+#Sciptus class is the central unit of your app , all work is handled from here
 
 class Scriptus(object):
 	def __init__(self):
+		#object routes dictionary is formed of url:function pairs
 		self.routes={}
-		self.session=None
-
-
-	def __call__(self,environ,start_response):
-		return self.app(environ,start_response)
+	
 
 	#defines a new route
 	def route(self,address,function):
@@ -27,39 +25,40 @@ class Scriptus(object):
 		#returns the return of route's function or None if no match was found
 		for route in self.routes.keys():
 			match=re.match(route,request.path)
+			
+			#if there's a url match , pass its variables as arguments to the route's function
 			if( match is not None):
 				urlargs=match.groups()
 				return self.routes[route](request,*urlargs)
 		return None
 
-	def getcookie(self,name,default=''):
-		try:
-			c=SimpleCookie()
-			c.load(self.environ['HTTP_COOKIE'])
-			return str(c[name].value)
-		except KeyError:
-			return default
-
 
 	#main function that processes requests from server
 	def app(self,environ,start_response):
-	
-		self.environ=environ
-		#create request object from environ
+
+		#create a Request object from environ
 		request=Request(environ)
 		
-		#get the response object from the function and if create one if the function doesn't return a response
+		#get a Response object from the route's function or create one from the return if it's not a Response object
 		returnobject=self.checkRoute(request)
 
+		#a 404 not found and 'not found' message are returned if the returnobject is None
 		if returnobject is None:
 			returnobject=Response('Not Found',status=404)
+
+		#if the returnobject isn't None but isn't a Response object (str for example) an Response object is with it as text
 		if type(returnobject) is not Response:
 			returnobject=Response(str(returnobject))
 
-
+		#now the Response object is ready to respond to the request
 		return returnobject(environ,start_response)
 
-		
+
+	#return the app function if the object itself is called in the server
+	def __call__(self,environ,start_response):
+		return self.app(environ,start_response)
+
+	#run the application without reload support
 	def run(self,host='localhost',port=8000):
 		server=make_server(host,port,self.app)
 		print "now serving on %s:%s"%(str(host),str(port))
