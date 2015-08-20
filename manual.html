@@ -100,7 +100,16 @@ app.route(<span style="color:#0b6125"><span style="color:#a71d5d;font-style:ital
 </pre><br>
 this should return " cookie value : new user "
 
+now you know how to do basic tasks , let's end this quick start tutorial with reading POST requests : <br><br>
 
+create a file (html file) with a simple form that has action="http://localhost:8000/readpost"(or whatever your URL is) and method="POST"
 
+<br>now you can read all sent data with the Request object's POST dict: <br>
 
+<pre style="background:#f9f9f9;color:#080808"><span style="color:#a71d5d;font-style:italic">def</span> <span style="color:#bf4f24">readpost</span>(<span style="color:#234a97">request</span>):
+    <span style="color:#5a525f;font-style:italic">#request object has a POST dictionary that includes your POST form data</span>
+    <span style="color:#794938">return</span> <span style="color:#0b6125">'user : <span style="color:#696969;font-weight:700">%s</span> is <span style="color:#696969;font-weight:700">%s</span> years old'</span><span style="color:#794938">%</span>(request.POST[<span style="color:#0b6125">'name'</span>],request.POST[<span style="color:#0b6125">'age'</span>])
+
+app.route(<span style="color:#0b6125"><span style="color:#a71d5d;font-style:italic">r</span>'<span style="color:#794938">^</span>/readpost/<span style="color:#794938">?</span><span style="color:#794938">$</span>'</span>,readpost)
+</pre>
 </p><br>
