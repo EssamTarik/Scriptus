@@ -66,5 +66,5 @@ def readfile(request):
 app.route(r'^/readfile/?$',readfile)
 
 #you can use this run function or the object's app function to operate from another server
-if __name__='__main__':
+if __name__=='__main__':
 	app.run()
