@@ -2,6 +2,7 @@ from Cookie import SimpleCookie
 from cgi import FieldStorage
 import urlparse
 import os
+import session
 
 class File(object):
 	def __init__(self,fileobject):
@@ -60,12 +61,13 @@ class Response(object):
 
 
 	
-	def __init__(self,text="",status="200 Ok",headers={'Content-Type':'text/html'},redirect=False):
+	def __init__(self,text="",status="200 Ok",headers={'Content-Type':'text/html'},redirect=False,session=False):
 		self.cookies=SimpleCookie()
 		statusCodes={
 		'200':'200 Ok',
 		'404':'404 Not Found'
 		}
+		self.session=session
 		self.text=text
 		self.headers=headers
 		self.status=statusCodes.get(str(status),str(status))
@@ -76,7 +78,6 @@ class Response(object):
 			self.status='302 Found'
 			headers['Location']=str(redirect)
 
-		
 
 
 	def removecookie(self,name):
@@ -91,9 +92,15 @@ class Response(object):
 		self.cookies[str(name)]['path']='/'
 
 	def __call__(self,environ,start_response):
+
+		if self.session is not False:
+			if type(self.session) is dict:
+				self.setcookie('sid',session.startsession(self.session))
+			else:
+				raise TypeError('session takes a dict as an argument')
+
 		
 		self.headers['Content-Length']=str(len(self.text))
-		print str(self.cookies)
 		self.headers['Set-Cookie']=self.cookies.output()[11:]
 		self.headers=[(x,self.headers[x]) for x in self.headers.keys()]
 		print self.headers
