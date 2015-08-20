@@ -46,7 +46,7 @@ class Scriptus(object):
 		if returnobject is None:
 			returnobject=Response('Not Found',status=404)
 
-		#if the returnobject isn't None but isn't a Response object (str for example) an Response object is with it as text
+		#if the returnobject isn't None but isn't a Response object (str for example) a Response object is created with it as text
 		if type(returnobject) is not Response:
 			returnobject=Response(str(returnobject))
 
