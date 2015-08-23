@@ -49,13 +49,14 @@ def tick():
 		return True
 	return False
 
-
-server=make_server('localhost',8000,app)
+port=8000
+server=make_server('localhost',port,app)
 
 
 #each second or tick() , file modification date is checked
 #if the file was updated , the mtime variable is then updated and reload() is called to reload the module and app variable is updated
 #then the server variable is updated with the new and asked to wait for another request
+print "now serving on localhost:%d"%port
 while(True):
 	if(tick() and int(os.path.getmtime(filename)) != int(mtime)):
 		
@@ -66,7 +67,7 @@ while(True):
 		app=getattr(mod,objectname)
 
 		del server
-		server=make_server('localhost',8000,app)
+		server=make_server('localhost',port,app)
 
 		print 'reloaded'
 		continue
